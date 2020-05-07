@@ -90,6 +90,8 @@ app.use("/api/empresa", require("./routes/empresa.routes"));
 app.use("/api", require("./routes/auth.routes"));
 
 //Static files
+app.use("/", express.static(path.join(__dirname, "static")));
+
 app.use("/uploads/", express.static(path.join(__dirname, "static", "uploads")));
 
 //Starting server
