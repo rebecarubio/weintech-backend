@@ -89,6 +89,7 @@ if (process.env.ON_HEROKU !== "TRUE") {
 }
 
 if (process.env.ON_HEROKU === "TRUE") {
+  /*
   app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
@@ -102,6 +103,8 @@ if (process.env.ON_HEROKU === "TRUE") {
 
     next();
   });
+  */
+  app.use(cors());
 }
 
 const options = {
