@@ -22,7 +22,6 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/buscar", async (req, res) => {
-  console.log(req.query);
   const { profesion, provincia } = req.query;
 
   const queryObject = {};
