@@ -3,7 +3,7 @@
 //DB
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const SALT_WORK_FACTOR = 10;
 
 const CandidatoSchema = new Schema({
