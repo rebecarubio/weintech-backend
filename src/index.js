@@ -34,7 +34,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-*/
+
 
 var allowedOrigins = ["http://localhost:3000", "http://localhost:3001"];
 
@@ -60,6 +60,46 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 */
+
+if (process.env.ON_HEROKU !== "TRUE") {
+  var allowedOrigins = [
+    "http://localhost:3000",
+    "192.168.1.135:*",
+    "http://localhost:3002",
+  ];
+
+  app.use(
+    cors({
+      origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+          var msg =
+            "The CORS policy for this site does not " +
+            "allow access from the specified Origin.";
+          return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+      },
+
+      exposedHeaders: ["Content-Length", "X-Foo", "X-Bar"],
+
+      credentials: true,
+    })
+  );
+}
+
+if (process.env.ON_HEROKU === "TRUE") {
+  app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    );
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
+
+    next();
+  });
+}
 
 const options = {
   uploadDir: "./src/static/uploads",
