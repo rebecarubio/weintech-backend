@@ -1,10 +1,40 @@
 const express = require("express");
 const router = express.Router();
 const Candidato = require("../models/candidato");
+const APIFeatures = require("../apiFeatures");
+
+router.get("/", async (req, res) => {
+  console.log(req.query);
+  const features = new APIFeatures(Candidato.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+
+  const candidatos = await features.query;
+  res.status(201);
+  res.json({ status: "success", data: candidatos });
+});
 
 router.get("/", async (req, res) => {
   const candidatos = await Candidato.find();
   res.json(candidatos);
+});
+
+router.get("/buscar", async (req, res) => {
+  console.log(req.query);
+  const { profesion, provincia } = req.query;
+
+  const queryObject = {};
+
+  if (profesion) queryObject.profesion = { $regex: profesion, $options: "i" };
+  if (provincia) queryObject.provincia = provincia;
+  //if (empresa) queryObject.empresa = { $regex: empresa, $options: "i" };
+
+  const candidatos = await Candidato.find(queryObject);
+
+  res.status(201);
+  res.json({ status: "success", data: candidatos });
 });
 
 router.get("/:id", async (req, res) => {

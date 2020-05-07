@@ -3,6 +3,7 @@ const app = express();
 const morgan = require("morgan");
 const path = require("path");
 var cors = require("cors");
+require("dotenv").config();
 
 const formData = require("express-form-data");
 
