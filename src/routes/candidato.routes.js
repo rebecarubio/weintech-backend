@@ -83,12 +83,22 @@ router.post("/", async (req, res) => {
 
 router.patch("/:id", async (req, res) => {
   if (req.files.image) {
-    const splitPath = req.files.image.path.split("\\");
+    let splitPath;
+    if (!process.env.ON_HEROKU === "TRUE") {
+      splitPath = req.files.image.path.split("\\");
+    } else {
+      splitPath = req.files.image.path.split("/");
+    }
     req.body.foto = splitPath[splitPath.length - 1];
   }
 
   if (req.files.curriculum) {
-    const splitPath = req.files.curriculum.path.split("\\");
+    let splitPath;
+    if (!process.env.ON_HEROKU === "TRUE") {
+      splitPath = req.files.curriculum.path.split("\\");
+    } else {
+      splitPath = req.files.curriculum.path.split("/");
+    }
     req.body.cv = splitPath[splitPath.length - 1];
   }
 
