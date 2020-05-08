@@ -19,7 +19,7 @@ const CandidatoSchema = new Schema({
   cv: { type: String },
   provincia: { type: String },
   profesion: { type: String },
-  foto: { type: String },
+  foto: { type: String, default: "default.jpg" },
   telefono: { type: String },
   direccion: { type: String },
 });
