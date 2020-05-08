@@ -66,8 +66,19 @@ router.post("/", async (req, res) => {
     foto,
     telefono,
   });
-  await candidato.save();
-  res.json({ status: "Candidat@ guardado" });
+
+  let candidatoo;
+  try {
+    candidatoo = await candidato.save();
+  } catch (error) {
+    res
+      .status(400)
+      .json({ status: "fail", mensaje: "Error al crear candidato" });
+  }
+
+  res
+    .status(201)
+    .json({ status: "success", mensaje: "Candidat@ creado", data: candidatoo });
 });
 
 router.patch("/:id", async (req, res) => {
@@ -87,7 +98,7 @@ router.patch("/:id", async (req, res) => {
     runValidators: true,
   });
 
-  res.json({ status: "Candidat@ actualizada" });
+  res.json({ mensaje: "Candidat@ actualizada", status: "success" });
 });
 
 router.delete("/:id", async (req, res) => {

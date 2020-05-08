@@ -22,7 +22,6 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({
       status: "fail",
       mensaje: "No hay candidato con este email/password",
-      data: "",
     });
   }
 

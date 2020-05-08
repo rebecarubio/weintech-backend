@@ -18,7 +18,14 @@ router.get("/", async (req, res) => {
 
 router.get("/buscar", async (req, res) => {
   console.log(req.query);
-  const { titulo, sector, provincia, empresa, salarioDesde } = req.query;
+  const {
+    titulo,
+    sector,
+    provincia,
+    empresa,
+    salarioDesde,
+    candidatoId,
+  } = req.query;
 
   const queryObject = {};
 
@@ -28,6 +35,7 @@ router.get("/buscar", async (req, res) => {
   if (provincia) queryObject.provincia = provincia;
   //if (empresa) queryObject.empresa = { $regex: empresa, $options: "i" };
   if (salarioDesde) queryObject.salario = { $gte: salarioDesde };
+  if (candidatoId) queryObject.candidatos = candidatoId;
 
   /*
   const ofertas = await Oferta.find({
@@ -39,7 +47,9 @@ router.get("/buscar", async (req, res) => {
   });
 */
 
-  const ofertas = await Oferta.find(queryObject);
+  const queryOfertas = Oferta.find(queryObject);
+  if (candidatoId) queryOfertas.populate("empresa");
+  const ofertas = await queryOfertas;
 
   res.status(201);
   res.json({ status: "success", data: ofertas });
@@ -71,16 +81,29 @@ router.get("/:id_provincia", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const oferta = new Oferta(req.body);
-  await oferta.save();
-  res.status(201).json({ status: "success" });
+
+  try {
+    await oferta.save();
+  } catch (error) {
+    res.status(400).json({ mensaje: "Error al crear oferta", status: "fail" });
+  }
+  res.status(201).json({ mensaje: "Oferta creada", status: "success" });
 });
 
 router.patch("/:id", async (req, res) => {
   const newOferta = req.body;
-  await Oferta.findByIdAndUpdate(req.params.id, newOferta, {
-    runValidators: true,
-  });
-  res.json({ status: "Oferta actualizada" });
+
+  try {
+    await Oferta.findByIdAndUpdate(req.params.id, newOferta, {
+      runValidators: true,
+    });
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ mensaje: "Error al actualizar oferta", status: "fail" });
+  }
+
+  res.status(201).json({ mensaje: "Oferta actualizada", status: "success" });
 });
 
 router.patch("/:id/inscribeCandidato", async (req, res) => {
@@ -93,7 +116,7 @@ router.patch("/:id/inscribeCandidato", async (req, res) => {
       console.log(err);
     }
   );
-  res.json({ status: "success", message: "Candidato inscrito" });
+  res.status(201).json({ status: "success", message: "Candidato inscrito" });
 });
 
 router.delete("/:id", async (req, res) => {

@@ -31,8 +31,16 @@ router.post("/", async (req, res) => {
     sector,
     telefono,
   });
-  await empresa.save();
-  res.json({ status: "Oferta guardada" });
+
+  let empresaa;
+  try {
+    await empresa.save();
+  } catch (error) {
+    res.status(400).json({ status: "fail", mensaje: "Error al crear empresa" });
+  }
+  res
+    .status(201)
+    .json({ status: "success", mensaje: "Empresa creada", data: empresaa });
 });
 
 router.patch("/:id", async (req, res) => {
