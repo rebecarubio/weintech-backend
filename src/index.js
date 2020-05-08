@@ -141,8 +141,10 @@ app.use("/uploads/", express.static(path.join(__dirname, "static", "uploads")));
 app.use("/", express.static(path.join(__dirname, "static")));
 
 app.get("*", function (req, res) {
-  res.sendFile(path.join(__dirname, "static/build", "index.html"));
+  res.sendFile(path.join(__dirname, "static/", "index.html"));
 });
+
+console.log("PATH:========>", path.join(__dirname, "static/", "index.html"));
 
 //Starting server
 app.listen(app.get("port"), () => {
