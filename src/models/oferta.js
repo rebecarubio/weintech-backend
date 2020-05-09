@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const OfertaSchema = new Schema({
-  candidatos: [{ type: Schema.Types.ObjectId, ref: "Candidato", unique: true }],
+  candidatos: [{ type: Schema.Types.ObjectId, ref: "Candidato" }],
   descripcion: { type: String },
   titulo: { type: String },
   salario: {
