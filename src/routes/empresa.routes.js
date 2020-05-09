@@ -45,15 +45,29 @@ router.post("/", async (req, res) => {
 
 router.patch("/:id", async (req, res) => {
   if (req.files.image) {
-    const splitPath = req.files.image.path.split("\\");
+    let splitPath;
+    //Para que funcione en servidores linux y windows
+    if (process.env.ON_HEROKU !== "TRUE") {
+      splitPath = req.files.image.path.split("\\");
+    } else {
+      splitPath = req.files.image.path.split("/");
+    }
     req.body.foto = splitPath[splitPath.length - 1];
   }
-  const newEmpresa = req.body;
-  await Empresa.findByIdAndUpdate(req.params.id, newEmpresa, {
-    runValidators: true,
-  });
 
-  res.json({ status: "Empresa actualizada" });
+  let empresa;
+  try {
+    empresa = await Empresa.findByIdAndUpdate(req.params.id, req.body, {
+      runValidators: true,
+      new: true,
+    });
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ status: "fail", message: "Error actualizar" });
+  }
+
+  res.json({ status: "success", data: empresa });
 });
 
 router.delete("/:id", async (req, res) => {

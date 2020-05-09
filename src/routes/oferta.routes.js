@@ -81,11 +81,13 @@ router.get("/:id_provincia", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const oferta = new Oferta(req.body);
-
+  console.log(req.body);
   try {
     await oferta.save();
   } catch (error) {
-    res.status(400).json({ mensaje: "Error al crear oferta", status: "fail" });
+    return res
+      .status(400)
+      .json({ mensaje: "Error al crear oferta", status: "fail" });
   }
   res.status(201).json({ mensaje: "Oferta creada", status: "success" });
 });
