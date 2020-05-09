@@ -84,7 +84,8 @@ router.post("/", async (req, res) => {
 router.patch("/:id", async (req, res) => {
   if (req.files.image) {
     let splitPath;
-    if (!process.env.ON_HEROKU === "TRUE") {
+    //Para que funcione en servidores linux y windows
+    if (process.env.ON_HEROKU !== "TRUE") {
       splitPath = req.files.image.path.split("\\");
     } else {
       splitPath = req.files.image.path.split("/");
@@ -94,13 +95,14 @@ router.patch("/:id", async (req, res) => {
 
   if (req.files.curriculum) {
     let splitPath;
-    if (!process.env.ON_HEROKU === "TRUE") {
+    if (process.env.ON_HEROKU !== "TRUE") {
       splitPath = req.files.curriculum.path.split("\\");
     } else {
       splitPath = req.files.curriculum.path.split("/");
     }
     req.body.cv = splitPath[splitPath.length - 1];
   }
+  console.log(req.body);
 
   const newCandidato = req.body;
   await Candidato.findByIdAndUpdate(req.params.id, newCandidato, {
