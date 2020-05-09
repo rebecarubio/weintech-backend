@@ -104,13 +104,16 @@ router.patch("/:id", async (req, res) => {
   }
   console.log(req.body);
 
-  const newCandidato = req.body;
-  await Candidato.findByIdAndUpdate(req.params.id, newCandidato, {
-    //new: true,
+  const candidato = await Candidato.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
     runValidators: true,
   });
 
-  res.json({ mensaje: "Candidat@ actualizada", status: "success" });
+  res.json({
+    mensaje: "Candidat@ actualizada",
+    status: "success",
+    data: candidato,
+  });
 });
 
 router.delete("/:id", async (req, res) => {

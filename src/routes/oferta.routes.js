@@ -85,6 +85,7 @@ router.post("/", async (req, res) => {
   try {
     await oferta.save();
   } catch (error) {
+    console.log(error);
     return res
       .status(400)
       .json({ mensaje: "Error al crear oferta", status: "fail" });
