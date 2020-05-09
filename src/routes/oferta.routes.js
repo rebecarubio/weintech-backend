@@ -119,6 +119,19 @@ router.patch("/:id/inscribeCandidato", async (req, res) => {
   res.status(201).json({ status: "success", message: "Candidato inscrito" });
 });
 
+router.patch("/:id/borraCandidato", async (req, res) => {
+  console.log(req.body);
+  Oferta.findByIdAndUpdate(
+    req.params.id,
+    { $pull: { candidatos: req.body.candidatoId } },
+    { safe: true, upsert: true, new: true, runValidators: true },
+    function (err, model) {
+      console.log(err);
+    }
+  );
+  res.status(201).json({ status: "success", message: "Candidato eliminado" });
+});
+
 router.delete("/:id", async (req, res) => {
   await Oferta.findByIdAndRemove(req.params.id);
   res.json({ status: "Oferta eliminada" });
