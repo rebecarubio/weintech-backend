@@ -18,7 +18,7 @@ const EmpresaSchema = new Schema({
   provincia: { type: String },
   direccion: { type: String },
   descripcion: { type: String },
-  foto: { type: String },
+  foto: { type: String, default: "default.jpg" },
   sector: { type: String },
   telefono: { type: String },
   ofertas: [{ type: Schema.Types.ObjectId, ref: "Oferta" }],
